@@ -28,7 +28,7 @@ def traverse_trees(right=3, down=1):
         x += right
     return trees
 
-a = [traverse_trees(1,1), traverse_trees(3,1), traverse_trees(5,1), traverse_trees(7,1), traverse_trees(1,2)]
+a = map(lambda args: traverse_trees(*args), [(1,1), (3,1), (5,1), (7,1), (1,2)])
 
 print(traverse_trees())
 from functools import reduce
