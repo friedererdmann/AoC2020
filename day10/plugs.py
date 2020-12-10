@@ -41,7 +41,7 @@ def get_trees():
     return expenses
 
 inputs = [int(x) for x in plugs.splitlines()]
-#inputs = get_trees()
+inputs = get_trees()
 inputs.sort()
 inputs.insert(0,0) # start plug
 inputs.insert(len(inputs), max(inputs)+3) # end device
@@ -67,10 +67,14 @@ for i in range(len(inputs)):
 
 print(consecutive_lists)
 
-from itertools import combinations
+tribonacci = [1, 1, 2, 4, 7, 13]
+
+possible_paths = []
 
 for llist in consecutive_lists:
-    if len(llist) > 2:
-        print(llist)
-        print(len(llist) // 3)
-        print(len(llist) // 4)
+    possible_paths.append(tribonacci[len(llist)-1])
+
+b = 1
+for i in possible_paths:
+    b *= i
+print(b)
