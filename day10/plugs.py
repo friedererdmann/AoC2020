@@ -67,12 +67,12 @@ for i in range(len(inputs)):
 
 print(consecutive_lists)
 
-tribonacci = [1, 1, 2, 4, 7, 13]
+tribonacci = [0, 1, 1, 2, 4, 7, 13]
 
 possible_paths = []
 
 for llist in consecutive_lists:
-    possible_paths.append(tribonacci[len(llist)-1])
+    possible_paths.append(tribonacci[len(llist)])
 
 b = 1
 for i in possible_paths:
