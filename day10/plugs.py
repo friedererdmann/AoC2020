@@ -55,7 +55,6 @@ consecutive_list = []
 for i in range(len(inputs)):
     if i+1 < len(inputs):
         if inputs[i+1] - inputs[i] == 1:
-            print(inputs[i])
             consecutive_list.append(inputs[i])
         else:
             consecutive_list.append(inputs[i])
@@ -66,6 +65,7 @@ for i in range(len(inputs)):
         consecutive_lists.append(consecutive_list)
 
 print(consecutive_lists)
+print([len(x) for x in consecutive_lists])
 
 tribonacci = [0, 1, 1, 2, 4, 7, 13]
 
