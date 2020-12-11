@@ -20,7 +20,7 @@ def get_trees():
     return expenses
 
 data = data.splitlines()
-#data = get_trees()
+data = get_trees()
 seats = [".{0}.".format(line) for line in data]
 h_border = "."*len(seats[0])
 seats.append(h_border)
@@ -31,15 +31,41 @@ from itertools import combinations
 def get_neighbors(y, x, rows):
     neighbors = []
 
-    for i, j in combinations([-1, -1, 0, 1, 1], 2):
-        a = y + i
-        b = x + j
-        neighbors.append(rows[a][b])
+    for i in [-1, 0, 1]:
+        for j in [-1, 0, 1]:
+            if i == 0 and j == 0:
+                continue
+            a = y + i
+            b = x + j
+            neighbors.append(rows[a][b])
 
     return neighbors
 
 
-def seating_round(rows):
+from itertools import combinations
+def get_first_neighbors(y, x, rows):
+    neighbors = []
+
+    max_y = len(rows)
+    max_x = len(rows[0])
+    max_n = max([max_y, max_x])
+    for i in [-1, 0, 1]:
+        for j in [-1, 0, 1]:
+            if i == 0 and j == 0:
+                continue
+            found = False
+            for f in range(1, max_n):
+                if not found:
+                    a = y + (i * f)
+                    b = x + (j * f)
+                    if 0 < a < max_y and 0 < b < max_x:
+                        if rows[a][b] in ["L", "#"]:
+                            neighbors.append(rows[a][b])
+                            found = True
+
+    return neighbors
+
+def seating_round(rows, max_neighbors, neighbor):
     empty = "L"
     seated = "#"
     floor = "."
@@ -50,35 +76,55 @@ def seating_round(rows):
         for x in range(len(row)):
             c_seat = rows[y][x]
             if c_seat == empty:
-                neighbors = get_neighbors(y, x, rows)
+                neighbors = neighbor(y, x, rows)
                 if not neighbors.count(seated):
                     c_seat = seated
             elif c_seat == seated:
-                neighbors = get_neighbors(y, x, rows)
-                if neighbors.count(seated) >= 4:
+                neighbors = neighbor(y, x, rows)
+                if neighbors.count(seated) >= max_neighbors:
                     c_seat = empty
             updated_row += c_seat
         updated_seats.append(updated_row)
     return updated_seats
 
 
-changing = True
-c_result = seats
-while changing:
-    for i, row in enumerate(c_result):
-        output = ""
-        for j in range(len(row)):
-            c = row[j]
-            if c == "#":
-                pass
-                #c = str(get_neighbors(j, i, c_result).count("#"))
-            output += c
-        print(output)
-    n_result = seating_round(c_result)
-    changing = c_result != n_result
-    c_result = n_result
+def part_one(pseats):
+    changing = True
+    c_result = pseats
+    while changing:
+        n_result = seating_round(c_result, 4, get_neighbors)
+        changing = c_result != n_result
+        c_result = n_result
 
-occupied = 0
-for row in c_result:
-    occupied += row.count("#")
-print(occupied)
+    occupied = 0
+    for row in c_result:
+        occupied += row.count("#")
+    print(occupied)
+
+
+part_one(seats)
+
+def part_two(pseats):
+    changing = True
+    c_result = pseats
+    while changing:
+        '''
+        for i, row in enumerate(c_result):
+            a = ""
+            for n, c in enumerate(row):
+                if c == "#":
+                    a += str(get_first_neighbors(i, n, c_result).count("#"))
+                else:
+                    a += c
+            print(a)
+        '''
+        n_result = seating_round(c_result, 5, get_first_neighbors)
+        changing = c_result != n_result
+        c_result = n_result
+
+    occupied = 0
+    for row in c_result:
+        occupied += row.count("#")
+    print(occupied)
+
+part_two(seats)
